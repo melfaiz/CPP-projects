@@ -11,6 +11,12 @@
 
 using namespace std;
 
+typedef struct card{
+    char trump;
+    char rank;
+} card_t;
+
+
 const int P_SCORES [CARDS_NB] = {0,0,0,10,2,3,4,11};
 const int T_SCORES [CARDS_NB] = {0,0,14,10,20,3,4,10};
 
@@ -22,15 +28,14 @@ int score[2] = {0,0};
 int bonus[2] = {0,0};
 int has_belote[4] = {0,0,0,0};
 
+vector< vector<char> > errors(4);
+vector< vector<card_t> > trump_cards(4);
+
 bool capot_1 = true;
 bool capot_2 = true;
 bool belote_1 = false;
 bool belote_2 = false;
 
-typedef struct card{
-    char trump;
-    char rank;
-} card_t;
 
 
 char get_rank(string card){
@@ -163,7 +168,7 @@ bool higher_than(card_t card1, card_t card2){
 
 }
 
-vector< vector<card_t> > trump_cards(4);
+
 
 int set_score(vector<card_t> trick,std::ostream& err){
 
@@ -248,14 +253,36 @@ int set_score(vector<card_t> trick,std::ostream& err){
     }
         // cout << " | " << temp_score_1 << " " << temp_score_2 << " | " ;
 
-        int max_score=0;
         
+        int max_score=0;
         for (size_t i = 0; i < trick.size(); i++)
         {
             int s = card_score(trick[i], game_trump);
+            int player = player_i(i);
+
+            auto v = errors[player];
+            bool present = false;
+
+            for (char c: v)
+            {
+                if (c == trick[i].trump )
+                {
+                   present = true;
+                }
+                
+            }
+            
+
+            if ( present ){
+                err << "ERROR: player " << player + 1 << " played a " << trick[i].rank << trick[i].trump ;
+                // err << " but he should not have any " << errors[player] << " left." ;
+                err << endl;
+                return false;
+            }
 
             if (trick[i].trump == trick_suit)
-                {
+                {  
+
                     if ( max_score < s )
                     {
                         
@@ -271,8 +298,22 @@ int set_score(vector<card_t> trick,std::ostream& err){
                             max_score = s;
                         }
                 
+                    }
+            }else
+            {
+                
+                errors[player].push_back(trick_suit);
             }
-             }
+
+
+            if ( trick[i].trump != trick_suit and trick[i].trump != game_trump and team_i(next_player) != team_i(player))
+            {   
+
+                errors[player].push_back(trick_suit);
+            }
+
+            
+
             
         }
 
@@ -398,3 +439,6 @@ bool game(std::istream& in, std::ostream& out, std::ostream& err){
     return true;
 
 }
+
+
+//////////////////  tar cfJ s198260.tar.xz s198260
