@@ -17,8 +17,7 @@ typedef struct card{
 } card_t;
 
 
-const int P_SCORES [CARDS_NB] = {0,0,0,10,2,3,4,11};
-const int T_SCORES [CARDS_NB] = {0,0,14,10,20,3,4,10};
+// Variables globales 
 
 char game_trump;
 int contract_team;
@@ -30,6 +29,8 @@ int has_belote[4] = {0,0,0,0};
 
 vector< vector<char> > errors(4);
 vector< vector<card_t> > trump_cards(4);
+
+vector< vector<char> > cards(4);
 
 bool capot_1 = true;
 bool capot_2 = true;
@@ -73,7 +74,7 @@ vector<card_t> get_trick(string line){
 }
 
 
-int card_score(card_t card,char game_trump){
+int card_score(card_t card){
 
     int s = 0;
 
@@ -130,11 +131,6 @@ int write_score(std::ostream& out){
     return 0;
 }
 
-
-
-
-
-
 int player_i(int i){
     return (next_player + i ) %4 ; // 0-1-2-3
 }
@@ -145,11 +141,11 @@ int team_i(int i){
 
 bool higher_than(card_t card1, card_t card2){
 
-    if (card_score(card1, game_trump) > card_score(card2, game_trump))
+    if (card_score(card1) > card_score(card2))
     {
         return true;
 
-    }else if( card_score(card1, game_trump) == card_score(card2, game_trump)){
+    }else if( card_score(card1) == card_score(card2)){
 
         if ( card1.rank > card2.rank )
         {
@@ -174,25 +170,27 @@ int set_score(vector<card_t> trick,std::ostream& err){
 
     int temp_score_1=0; // sum of card scores played by team 1
     int temp_score_2=0; // sum of card scores played by team 2
-    int temp_next_player=0; // index of winning player in the current trick
+    int next_player_i=0; // index of winning player in the current trick
 
-    char trick_suit = trick[0].trump; // current color
+    char trick_suit = trick[0].trump; // current color in the trick
 
-    int has_trump =0;        
+    bool has_trump = false;   //      
     int max_has_trump = -1; 
-    int max_score_trump = -1;
+    int max_score_trump =-1;
+
+    max_score_trump += 0;
 
 
-    for (size_t i = 0; i < trick.size(); i++)
+    for (size_t i = 0; i < 4; i++)
     {
         int player = player_i(i); // current player in trick, players are 0-1-2-3
         int team = team_i(player_i(i)); // current team playing, teams are 0-1
 
-        int s = card_score(trick[i], game_trump); // score of current card in trick
+        int s = card_score(trick[i]); // score of current card in trick
 
-        // cout << trick[i].rank << trick[i].trump << " " << s << " p" << player+1 << " , " ;
+        
 
-        if (team == 0)
+        if (team == 0) // first team is 0
         {
             temp_score_1 += s;
         }else{
@@ -203,24 +201,15 @@ int set_score(vector<card_t> trick,std::ostream& err){
         if (trick[i].trump == game_trump ) // played color is the game trump
         {
            
-            has_trump+=1;          
+            has_trump = true;
 
-            if ( card_score(trick[i], game_trump) > max_score_trump)
+            if (higher_than(trick[i], trick[max_has_trump]))
             {
-                max_score_trump = card_score(trick[i], game_trump);
-                max_has_trump = i;
-
-                
-            }else if (card_score(trick[i], game_trump) == max_score_trump)
-            {
-                if ( trick[i].rank == '8')
-                {
-                  
-                    max_score_trump = card_score(trick[i], game_trump);
+                    max_score_trump = card_score(trick[i]);
                     max_has_trump = i;
-                }
-                
+                    
             }
+            
             
 
             // check for belote-rebelote
@@ -243,29 +232,74 @@ int set_score(vector<card_t> trick,std::ostream& err){
                 
             }
 
-
-            
-        
             
 
         }
+
     
     }
-        // cout << " | " << temp_score_1 << " " << temp_score_2 << " | " ;
 
         
+
         int max_score=0;
         for (size_t i = 0; i < trick.size(); i++)
         {
-            int s = card_score(trick[i], game_trump);
-            int player = player_i(i);
+                int s = card_score(trick[i]);
+                
+                    if (trick[i].trump == trick_suit)
+                {  
 
+                    if ( max_score < s )
+                    {
+                        
+                            next_player_i = i;
+                            max_score = s;
+                    
+
+                    }else if( max_score == s){
+
+                        if (higher_than(trick[i], trick[next_player_i]))
+                        {
+                            next_player_i = i;
+                            max_score = s;
+                        }
+                
+                    }
+            }
+       
+        }
+
+        if (has_trump)
+        {
+            next_player_i = max_has_trump;
+        }
+
+        if ( team_i( player_i(next_player_i) ) == 1 )
+        {
+     
+            score[1] += temp_score_1 + temp_score_2;
+            capot_1 = false;
+        }else if (  team_i( player_i(next_player_i) ) == 0  )
+        {   
+           
+            score[0] += temp_score_1 + temp_score_2;
+            capot_2 = false;
+            
+        }
+
+
+        // PLAYERS ERRORS
+        for (size_t i = 0; i < trick.size(); i++)
+        {
+   
+            int player = player_i(i);
+            char trick_suit = trick[0].trump;
             auto v = errors[player];
             bool present = false;
 
-            for (char c: v)
+            for (char e: v)
             {
-                if (c == trick[i].trump )
+                if (trick[i].trump == e)
                 {
                    present = true;
                 }
@@ -280,116 +314,56 @@ int set_score(vector<card_t> trick,std::ostream& err){
                 return false;
             }
 
-            if (trick[i].trump == trick_suit)
-                {  
 
-                    if ( max_score < s )
-                    {
-                        
-                            temp_next_player = i;
-                            max_score = s;
-                    
-
-                    }else if( max_score == s){
-
-                        if (higher_than(trick[i], trick[temp_next_player]))
-                        {
-                            temp_next_player = i;
-                            max_score = s;
-                        }
-                
-                    }
-            }else
-            {
-                
-                errors[player].push_back(trick_suit);
-            }
-
-
-            if ( trick[i].trump != trick_suit and trick[i].trump != game_trump and team_i(next_player) != team_i(player))
+            if ( trick[i].trump != trick_suit )
             {   
-
+       
                 errors[player].push_back(trick_suit);
+
+                if (trick[i].trump != game_trump  and team_i(player) != team_i(player_i(next_player_i)) and team_i(player) != team_i(player_i(0)))
+                {
+                                  
+                                    errors[player].push_back(game_trump);
+                }
+                
+
             }
 
-            
 
             
         }
-
-       
-
-
-    if (has_trump==0)
-    {   
-
-        
-
-        if ( team_i( player_i(temp_next_player) ) == 1 )
-        {
-     
-            score[1] += temp_score_1 + temp_score_2;
-            capot_1 = false;
-        }else if (  team_i( player_i(temp_next_player) ) == 0  )
-        {   
-           
-            score[0] += temp_score_1 + temp_score_2;
-            capot_2 = false;
-            
-        }
-
-
-    }else
-    {   
-        if ( team_i( player_i(max_has_trump) ) == 0 )
-        {
-            score[0] += temp_score_1 + temp_score_2;
-            capot_2 = false;
-        }else{
-            score[1] += temp_score_1 + temp_score_2;
-            capot_1 = false;
-        }
-
-        temp_next_player = max_has_trump;
-        
-    }
 
     
 
-    next_player = ( temp_next_player + next_player  ) %4;
- 
-    
+    next_player = ( next_player_i + next_player  ) %4;
 
     return true;
 
 }
 
+
 bool game(std::istream& in, std::ostream& out, std::ostream& err){
 
+    in >> game_trump >> contract_team; // Reads the first line of in.txt
 
+    vector<card_t> trick; // vector of 4 cards in a trick
 
-    in >> game_trump >> contract_team;
-
-    vector<card_t> trick;
-
-    string line;
-    int line_i = 0;
+    string line; // Will contain each line in in.txt
+    int line_i = 0; // Line index in in.txt
     while(std::getline(in, line)){
 
-        if (line_i != 0)
+        if (line_i != 0) // Skips the first line
         {
-            trick = get_trick(line);
+            trick = get_trick(line); // Reads line from file into the vector trick.
 
-            if(set_score(trick,err) == false){
+            if(set_score(trick,err) == false) // Returns false in case of error
+            {
                 return false;
             }
 
-
-
-            if (line_i == 8)
+            if (line_i == 8) // Last trick
             {
-
-                    
+  
                     // 10 de Der: WINNING LAST TRICK
                     if (team_i(next_player) == 0)
                     {
@@ -400,45 +374,37 @@ bool game(std::istream& in, std::ostream& out, std::ostream& err){
 
             }
             
-            write_score(out);
-
-            // cout << score[0] + bonus[0] << " " <<  score[1] +  bonus[1] << " " << next_player + 1 << endl;
-
-
+            write_score(out); // writes the score into out.txt 
 
         } 
         line_i +=1;
     }
 
     // CAPOT: WINNING ALL TRICKS
-    if(capot_1){
-        
+    if(capot_1)
+    {        
         score[0] +=90;
-    }if(capot_2){
-        
+    }
+    if(capot_2)
+    {
         score[1] +=90;
     }
 
     // Final score
     if (score[0] + bonus[0] < score[1] +  bonus[1] and contract_team == 1)
-    {
-        
+    {        
         score[1] = score[0] + score[1] ;
         score[0] = 0;
-    }else if (score[1] +  bonus[1] < score[0] + bonus[0]  and contract_team == 2){
+    }else if (score[1] +  bonus[1] < score[0] + bonus[0]  and contract_team == 2)
+    {
         score[0] = score[1] + score[0] ;
         score[1] = 0;
     }
 
-
-
-    // cout << score[0] + bonus[0] << " " << score[1] +  bonus[1] << endl;
-    out << score[0] + bonus[0] << " " <<  score[1] +  bonus[1] << endl;
+   
+    out << score[0] + bonus[0] << " " <<  score[1] +  bonus[1] << endl; // Writes final score into out.txt
     
 
     return true;
 
 }
-
-
-//////////////////  tar cfJ s198260.tar.xz s198260
