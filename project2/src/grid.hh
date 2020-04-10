@@ -13,6 +13,7 @@ public:
 
 
         size = s;
+        score = 0;
         grid.resize(size);
         for (int i = 0; i < size; ++i)
             grid[i].resize(size);
@@ -33,16 +34,23 @@ public:
     int getSize(){
         return size;
     }
+    
+    int getScore(){
+        return score;
+    }
 
     void display();
+
+    void saveGrid(ofstream& file);
 
     void test(){
         grid = 
         {
-            {0,0,0,0},
-            {0,0,0,4},
-            {0,0,0,0},
-            {0,2,0,2},
+            {0,0,0,0,0},
+            {0,0,0,0,0},
+            {0,0,0,0,0},
+            {0,0,0,0,0},
+            {0,8,4,2,2},
         };
     };
     
@@ -55,6 +63,7 @@ public:
 
 private:
     int size;
+    int score;
     vector<vector<int>> grid;
     
 };

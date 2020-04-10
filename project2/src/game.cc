@@ -3,9 +3,9 @@
 
 void Game::displayInfos(){
 
-        cout << "SCORE: " << score << endl;
+        cout << "SCORE: " << grid.getScore() << endl;
         cout << "LEVEL: " << level << endl;
-        cout << "SIZE: " << getSize() << endl << endl;
+        cout << "SIZE: " << Game::getSize() << endl << endl;
 }
 
 int Game::direction(char cmd){
@@ -30,18 +30,55 @@ int Game::direction(char cmd){
         }
 }
 
+char Game::displayMenu()
+{
+
+    char key;
+    do
+    {
+        clearScreen();
+        
+        cout << "  ** MENU **" << endl;
+        cout << "  e start a new Easy (5-by-5) game" << endl;
+        cout << "  h start a new Hard (4-by-4) game" << endl;
+        cout << "  r Resume the last saved game" << endl;
+        cout << "  q Quit the game" << endl << endl;
+
+        cout << "  Rentrez votre choix: " ;
+
+        cin >> key;
+
+        if (key == 'e' or key == 'h' or key == 'r' or key == 'q')
+        {
+            return key;
+        }
+        
+
+    } while (true);
+
+}
+
+void Game::save(){
+    
+        ofstream saved;
+        saved.open ("power11.saved", ofstream::app);        
+        saved << "Score: " << grid.getScore() << endl;
+        grid.saveGrid(saved);
+        saved.close();
+   
+
+}
 void Game::play(){
 
     
         char cmd;
         // grid.test();
+        grid.placeAtRandomPosition();
         do
         {
                 
                 clearScreen();
-                displayInfos();
-
-
+                
                 if (cmd == 'u')
                 {   grid.moveUp();
                 }else if(cmd == 'd'){
@@ -51,10 +88,15 @@ void Game::play(){
                 }else if(cmd == 'r'){
                     grid.moveRight();
                 }
+
+                
+                
+                
                 
                                 
-                
+                displayInfos();
                 grid.placeAtRandomPosition();
+                save();
                 grid.display();
                 
                 // if (!compareGrid())

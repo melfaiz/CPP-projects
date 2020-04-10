@@ -6,7 +6,7 @@ int main()
 {
     srand((unsigned) time(0));
 
-    char menu = displayMenu();
+    char menu = Game::displayMenu();
 
     
 

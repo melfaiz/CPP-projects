@@ -19,6 +19,7 @@ public:
             this->level = "easy";
             Grid new_grid(5);
             this->grid = new_grid;
+            
         }else
         {   
             this->level = "hard";
@@ -26,18 +27,13 @@ public:
             this->grid = new_grid;
         }
         
-        this->score = 0;
+     
     
     }
 
-    int getScore(){
-        return score;
-    }
 
-    void save(){
-        cout << "GAME SAVED " << endl;
-    }
 
+    void save();
     void resume(){
         cout << "RESUMING LAST GAME " << endl;
     }
@@ -74,13 +70,14 @@ public:
     
 
 
+    static char displayMenu();
+
 
 private:
-    int score;
+    
     string level;
     Grid grid;
     Grid lastGrid;
-       
 
 };
 
