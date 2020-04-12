@@ -312,3 +312,37 @@ void Grid::saveGrid(ofstream& cout){
     cout << endl;
 
 }
+
+// void Grid::readGrid(ifstream& cout){
+//     for (int i = 0; i < 5 * size + 1; i++)
+//     {
+//         cout << "#" ;
+//     }
+//     cout << endl;
+    
+
+//     for (int i = 0; i < size; i++)
+//     {
+//         cout << "#";
+
+//         for (int j = 0; j < size; j++)
+//         {
+            
+//             cout <<  formatCase(grid[i][j]) ;
+
+//             if (j != size-1)
+//                 cout << "|";
+           
+//         }
+
+//         cout << "#" << endl;
+        
+//     }
+    
+//     for (int i = 0; i < 5 * size + 1; i++)
+//     {
+//         cout << "#" ;
+//     }
+//     cout << endl;
+
+// }

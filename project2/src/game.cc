@@ -3,9 +3,8 @@
 
 void Game::displayInfos(){
 
-        cout << "SCORE: " << grid.getScore() << endl;
-        cout << "LEVEL: " << level << endl;
-        cout << "SIZE: " << Game::getSize() << endl << endl;
+        cout << "Score: " << grid.getScore() << endl;
+
 }
 
 int Game::direction(char cmd){
@@ -61,49 +60,78 @@ char Game::displayMenu()
 void Game::save(){
     
         ofstream saved;
-        saved.open ("power11.saved", ofstream::app);        
-        saved << "Score: " << grid.getScore() << endl;
-        grid.saveGrid(saved);
+        saved.open ("power11.saved");  
+
+        for(size_t i = pile.size() ; i-- ;){
+                saved << "Score: " << pile[i].getScore() << endl;
+                pile[i].saveGrid(saved);
+        }      
+
         saved.close();
+        cout << "* * * * * * * GAME SAVED * * * * * * *" << endl;
    
 
 }
+
+void Game::undo(){
+
+}
+
+void Game::resume(){
+
+
+
+}
+
+
 void Game::play(){
 
     
         char cmd;
-        // grid.test();
-        grid.placeAtRandomPosition();
         do
         {
                 
                 clearScreen();
                 
-                if (cmd == 'u')
-                {   grid.moveUp();
-                }else if(cmd == 'd'){
-                    grid.moveDown();
-                }else if(cmd == 'l'){
-                    grid.moveLeft();
-                }else if(cmd == 'r'){
-                    grid.moveRight();
+                if (cmd == 's')
+                {
+                        save();                        
+                        
+                }else if(cmd == 'b'){
+                        
+                        undo();
+                        
+                }else{
+
+                        if (cmd == 'u')
+                        {  
+                        grid.moveUp();
+                        grid.placeAtRandomPosition();
+                        }else if(cmd == 'd'){
+                        grid.moveDown();
+                        grid.placeAtRandomPosition();
+                        }else if(cmd == 'l'){
+                        grid.moveLeft();
+                        grid.placeAtRandomPosition();
+                        }else if(cmd == 'r'){
+                        grid.moveRight();
+                        grid.placeAtRandomPosition();
+                        }
+                        
+                        pile.push_back(grid);
                 }
+                        
+                        
+                        
+                                        
+                        displayInfos();                        
+                        grid.display();
+                        cout << "NEXT MOVE: ";
 
                 
                 
                 
-                
-                                
-                displayInfos();
-                grid.placeAtRandomPosition();
-                save();
-                grid.display();
-                
-                // if (!compareGrid())
-                
 
-                // backupGrid();
-                cout << "NEXT MOVE: ";
 
         } while (cin >> cmd);
 

@@ -7,18 +7,16 @@ int main()
     srand((unsigned) time(0));
 
     char menu = Game::displayMenu();
-
     
 
     if (menu == 'e' or menu == 'h')
     {
-        Game new_game(menu);
+        Game new_game = Game(menu);
         new_game.play();
 
     }else if(menu == 'r'){
-        // resume game
-    }else{
-        return true;
+        Game resumed_game = Game();
+        resumed_game.play();
     }
     
     
