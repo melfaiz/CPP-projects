@@ -7,77 +7,8 @@ class Grid {
 
 public:
 
-
-    Grid(){
-
-        ifstream saved;
-        saved.open ("power11.saved");  
-        
-        string line;
-        
-        cout << "zero :" << atoi("  ") << endl;
-        size = 5;
-
-        int line_i = 0;
-        int i=0;
-        while(std::getline(saved, line) && line_i< size + 2){
-            istringstream buf(line);
-            
-            if (line_i==0)
-            {
-                line = line.substr (6,line.size());                          
-                score = atoi(line.c_str());
-                // cout <<  score << endl;  
-            }else if (line_i==1)
-            {
-                size = ( line.length() - 1 ) / 5;
-                // cout <<  size << endl;   
-
-                grid.resize(size);
-                for (int i = 0; i < size; ++i)
-                    grid[i].resize(size);
-
-            }else{
-                    
-                    
-
-
-
-                    int j = 0;
-                    string buf;
-                    for (size_t k = 1;k < line.length(); k++)
-                    {   
-                        
-                        
-                        if (line[k] != '|' and line[k] != '#')
-                        {
-                            buf += line[k];
-                           
-                        }else{
-                            grid[i][j] = atoi(buf.c_str());
-                            cout << i << j <<  ":" << buf << ",";
-                            buf = "";
-                            j++;
-                        }
-                        
-                    }
-                    cout << endl;
-                    i++;
-                     
-            }
-            
-            line_i++;
-
-        }
-        
-        saved.close();
-        
-
-            
-
-        
-    };
-
+    Grid() = default;
+    
     Grid(int s){
 
 
@@ -91,7 +22,7 @@ public:
             for (int j = 0; j < size; j++)
                 grid[i][j] = 0 ;
 
-        this->placeAtRandomPosition();
+        
 
 
     }
@@ -131,6 +62,23 @@ public:
     void moveRight();
 
     bool isInside(int i,int j);
+
+    void setScore(int s){
+        score = s;
+    }
+    void setArray(vector<vector<int>> array){
+        grid = array;
+    }
+
+    void setSize(int s){
+        size = s;
+    }
+
+    void initArray(int size){
+        grid.resize(size);
+        for (int i = 0; i < size; ++i)
+            grid[i].resize(size);
+    }
 
 private:
     int size;

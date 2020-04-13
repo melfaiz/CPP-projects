@@ -16,16 +16,18 @@ public:
     Game() = default;
 
     Game(char m){
-    
+        
         if (m == 'e'){
             Grid new_grid = Grid(5);
-            grid = new_grid;
+             pile.push_back(new_grid);
             
         }else
         {   
             Grid new_grid = Grid(4);
-            grid = new_grid;
+            pile.push_back(new_grid);
         }
+
+       
         
      
     
@@ -40,9 +42,13 @@ public:
     void resume();
 
     int getSize(){
-        return grid.getSize();
+        return pile.back().getSize();
     }
 
+    void start(){
+        pile.back().placeAtRandomPosition();
+        pile.back().placeAtRandomPosition();
+    }
     void play();
     void displayInfos();
     int direction(char cmd);
@@ -51,24 +57,37 @@ public:
     //     lastGrid = grid;
     // }
     
-    // bool compareGrid(){
-    //     bool flag = true;
-    //     int size = grid.getSize();
-    //     for (int i = 0; i < size; i++)
-    //     {
-    //         for (int j = 0; i < size; j++)
-    //         {
-    //             if (grid(i,j) != lastGrid(i,j))
-    //             {
-    //                 return false;
-    //             }
-                
-    //         }
+    bool gridChanged(Grid tmp){
+
+        if (pile.size() < 2)
+        {
+            return true;
+        }else{
+
             
-    //     }
-    //     return flag;
+            Grid grid = pile.back();
+            Grid lastGrid = pile[pile.size() - 2] ;
+            int size = grid.getSize();
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    if (grid(i,j) != tmp(i,j) )
+                    {
+                        return true;
+
+                    }
+                    
+                }
+                
+            }
+            return false;
+
+        }
         
-    // }
+
+        
+    }
     
 
 
@@ -77,7 +96,7 @@ public:
 
 private:
 
-    Grid grid;
+    string info;
     vector<Grid> pile;
 
 };
