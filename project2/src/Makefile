@@ -9,8 +9,8 @@ CXX?=g++
 CXXFLAGS?=-std=c++14 -O3 -Wall -g -Werror
 
 # Default target (it comes first), conventionally called `all`
-# Replace `my_app` with the name of your executable (here and below)
-all:	my_app
+
+all:	power11
 
 # Removes the build folder, but keeps generated executable if present
 clean:
@@ -18,10 +18,10 @@ clean:
 
 # Removes both the build folder and generated executable
 dist-clean:	clean
-	rm -f my_app
+	rm -f power11
 
-# `my_app` is assumed to depend on all objects (i.e. on all .cc files)
-my_app:	$(OBJS)
+
+power11:	$(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Include generated dependencies, rebuilding them if necessary

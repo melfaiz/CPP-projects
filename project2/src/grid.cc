@@ -17,21 +17,21 @@ string formatCase(int n){
 
 void Grid::display(){
 
-    for (int i = 0; i < 5 * this->size + 1; i++)
+    for (int i = 0; i < 5 * size + 1; i++)
     {
         cout << "#" ;
     }
     cout << endl;
     
 
-    for (int i = 0; i < this->size; i++)
+    for (int i = 0; i < size; i++)
     {
         cout << "#";
 
-        for (int j = 0; j < this->size; j++)
+        for (int j = 0; j < size; j++)
         {
             
-            cout <<  formatCase(this->grid[i][j]) ;
+            cout <<  formatCase(array[i][j]) ;
 
             if (j != size-1)
                 cout << "|";
@@ -42,7 +42,7 @@ void Grid::display(){
         
     }
     
-    for (int i = 0; i < 5 * this->size + 1; i++)
+    for (int i = 0; i < 5 * size + 1; i++)
     {
         cout << "#" ;
     }
@@ -61,10 +61,10 @@ void Grid::placeAtRandomPosition(){
         line = random_index(size); 
         column = random_index(size);
 
-        if (grid[line][column] == 0)
+        if (array[line][column] == 0)
         {
             occupied = 0;
-            grid[line][column] = random2or4();
+            array[line][column] = random2or4();
         }
         
     }
@@ -90,14 +90,14 @@ void Grid::moveUp(){
 
             for(int k=j+1;k<size;k++){
 
-                if (grid[k][i] && flag == 1)
+                if (array[k][i] && flag == 1)
                 {
-                    if(grid[j][i]==grid[k][i])
+                    if(array[j][i]==array[k][i])
                     {
             
-                        grid[j][i]+=grid[k][i];
-                        score += grid[j][i];
-                        grid[k][i]=0;
+                        array[j][i]+=array[k][i];
+                        score += array[j][i];
+                        array[k][i]=0;
                 
                     }
 
@@ -113,13 +113,13 @@ void Grid::moveUp(){
         for(int i=0;i<size;i++){
             for(int j=0;j<size;j++)
             {
-                if(!grid[j][i])
+                if(!array[j][i])
                 {
                     for(int k=j+1;k<size;k++)
-                        if(grid[k][i])
+                        if(array[k][i])
                         {
-                            grid[j][i]=grid[k][i];
-                            grid[k][i]=0;
+                            array[j][i]=array[k][i];
+                            array[k][i]=0;
                             break;
                         }
                 }
@@ -138,14 +138,14 @@ void Grid::moveDown(){
 
             for(int k=j-1;k>=0;k--){
 
-                if (grid[k][i] && flag == 1)
+                if (array[k][i] && flag == 1)
                 {
-                    if(grid[j][i]&&grid[j][i]==grid[k][i])
+                    if(array[j][i]&&array[j][i]==array[k][i])
                     {
                     
-                        grid[j][i] += grid[k][i];
-                        score += grid[j][i];
-                        grid[k][i]=0;
+                        array[j][i] += array[k][i];
+                        score += array[j][i];
+                        array[k][i]=0;
 
                     }
 
@@ -162,13 +162,13 @@ void Grid::moveDown(){
     for(int i=0;i<size;i++){
             for(int j=size-1;j>=0;j--)
             {
-                if(!grid[j][i])
+                if(!array[j][i])
                 {
                     for(int k=j-1;k>=0;k--)
-                        if(grid[k][i])
+                        if(array[k][i])
                         {
-                            grid[j][i]=grid[k][i];
-                            grid[k][i]=0;
+                            array[j][i]=array[k][i];
+                            array[k][i]=0;
                             break;
                         }
                 }
@@ -187,17 +187,17 @@ void Grid::moveLeft(){
                 flag = 1;
                 for(int k=j+1;k<size;k++){
 
-                    if (grid[i][k] && flag == 1)
+                    if (array[i][k] && flag == 1)
                     {
                         /* code */
                    
                     
-                        if(grid[i][j] == grid[i][k])
+                        if(array[i][j] == array[i][k])
                         {
                            
-                            grid[i][j]+=grid[i][k];
-                            score += grid[i][j];
-                            grid[i][k]=0;
+                            array[i][j]+=array[i][k];
+                            score += array[i][j];
+                            array[i][k]=0;
                             
                         }
 
@@ -214,13 +214,13 @@ void Grid::moveLeft(){
     for(int i=0;i<size;i++){
         for(int j=0;j<size;j++)
         {
-            if(!grid[i][j])
+            if(!array[i][j])
             {
                 for(int k=j+1;k<size;k++)
-                    if(grid[i][k])
+                    if(array[i][k])
                     {
-                        grid[i][j]=grid[i][k];
-                        grid[i][k]=0;
+                        array[i][j]=array[i][k];
+                        array[i][k]=0;
                         break;
                     }
             }
@@ -241,14 +241,14 @@ void Grid::moveRight(){
 
             for(int k=j-1;k>=0;k--){
 
-                if (grid[i][k] && flag == 1)
+                if (array[i][k] && flag == 1)
                 {
-                    if(grid[i][k] &&grid[i][j]==grid[i][k])
+                    if(array[i][k] &&array[i][j]==array[i][k])
                     {
                         
-                        grid[i][j]+=grid[i][k];
-                        score += grid[i][j];
-                        grid[i][k]=0;
+                        array[i][j]+=array[i][k];
+                        score += array[i][j];
+                        array[i][k]=0;
 
                     }
                     flag = 0;
@@ -261,13 +261,13 @@ void Grid::moveRight(){
     for(int i=0;i<size;i++){
         for(int j=size-1;j>=0;j--)
         {
-            if(!grid[i][j])
+            if(!array[i][j])
             {
                 for(int k=j-1;k>=0;k--)
-                    if(grid[i][k])
+                    if(array[i][k])
                     {
-                        grid[i][j]=grid[i][k];
-                        grid[i][k]=0;
+                        array[i][j]=array[i][k];
+                        array[i][k]=0;
                         break;
                     }
             }
@@ -294,7 +294,7 @@ void Grid::saveGrid(ofstream& cout){
         for (int j = 0; j < size; j++)
         {
             
-            cout <<  formatCase(grid[i][j]) ;
+            cout <<  formatCase(array[i][j]) ;
 
             if (j != size-1)
                 cout << "|";
@@ -313,36 +313,3 @@ void Grid::saveGrid(ofstream& cout){
 
 }
 
-// void Grid::readGrid(ifstream& cout){
-//     for (int i = 0; i < 5 * size + 1; i++)
-//     {
-//         cout << "#" ;
-//     }
-//     cout << endl;
-    
-
-//     for (int i = 0; i < size; i++)
-//     {
-//         cout << "#";
-
-//         for (int j = 0; j < size; j++)
-//         {
-            
-//             cout <<  formatCase(grid[i][j]) ;
-
-//             if (j != size-1)
-//                 cout << "|";
-           
-//         }
-
-//         cout << "#" << endl;
-        
-//     }
-    
-//     for (int i = 0; i < 5 * size + 1; i++)
-//     {
-//         cout << "#" ;
-//     }
-//     cout << endl;
-
-// }

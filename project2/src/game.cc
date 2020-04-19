@@ -60,7 +60,7 @@ void Game::undo(){
 }
 
 
-void Game::play(){
+int Game::play(){
 
         Grid grid = pile.back();
     
@@ -86,6 +86,9 @@ void Game::play(){
                         undo();
                         grid = pile.back();
                         
+                        
+                }else if(cmd == 'q'){
+                        return false;
                         
                 }else{
 
@@ -132,11 +135,49 @@ void Game::play(){
 
         }
 
-        cout << endl << endl;;
+        cout << endl << endl;
+        return true;
 
     
 }
 
+bool Game::gridChanged(Grid tmp){
+
+        if (pile.size() < 2)
+        {
+                return true;
+        }else{
+
+                
+                Grid grid = pile.back();
+                Grid lastGrid = pile[pile.size() - 2] ;
+                int size = grid.getSize();
+                for (int i = 0; i < size; i++)
+                {
+                for (int j = 0; j < size; j++)
+                {
+                        if (grid(i,j) != tmp(i,j) )
+                        {
+                        return true;
+
+                        }
+                        
+                }
+                
+                }
+                return false;
+
+        }
+
+
+
+}
+
+
+void Game::start(){
+        pile.back().placeAtRandomPosition();
+        pile.back().placeAtRandomPosition();
+}
 
 vector<string> SavedToVector(){
 
@@ -214,13 +255,13 @@ void Game::resume(){
                 }
 
                 
-                Grid ngrid;
-                ngrid.setArray(array);
-                ngrid.setScore(score);
-                ngrid.setSize(size);
+                Grid new_grid;
+                new_grid.setArray(array);
+                new_grid.setScore(score);
+                new_grid.setSize(size);
                 
 
-                saved_pile.push_back(ngrid);
+                saved_pile.push_back(new_grid);
         }
 
         pile = saved_pile;

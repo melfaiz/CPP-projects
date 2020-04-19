@@ -14,13 +14,13 @@ public:
 
         size = s;
         score = 0;
-        grid.resize(size);
+        array.resize(size);
         for (int i = 0; i < size; ++i)
-            grid[i].resize(size);
+            array[i].resize(size);
 
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
-                grid[i][j] = 0 ;
+                array[i][j] = 0 ;
 
         
 
@@ -28,7 +28,7 @@ public:
     }
     
     int operator () (int i,int j) { 
-            return grid[i][j]; 
+            return array[i][j]; 
     } 
 
     void placeAtRandomPosition();
@@ -45,16 +45,6 @@ public:
 
     void saveGrid(ofstream& file);
 
-    void test(){
-        grid = 
-        {
-            {0,0,0,0,0},
-            {0,0,0,0,0},
-            {0,0,0,0,0},
-            {0,0,0,0,0},
-            {0,8,4,2,2},
-        };
-    };
     
     void moveUp();
     void moveDown();
@@ -66,24 +56,19 @@ public:
     void setScore(int s){
         score = s;
     }
-    void setArray(vector<vector<int>> array){
-        grid = array;
+    void setArray(vector<vector<int>> new_array){
+        array = new_array;
     }
 
     void setSize(int s){
         size = s;
     }
 
-    void initArray(int size){
-        grid.resize(size);
-        for (int i = 0; i < size; ++i)
-            grid[i].resize(size);
-    }
 
 private:
     int size;
     int score;
-    vector<vector<int>> grid;
+    vector<vector<int>> array;
     
 };
 
