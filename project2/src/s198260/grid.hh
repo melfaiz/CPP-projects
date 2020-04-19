@@ -1,7 +1,13 @@
 #ifndef GRID_HH
 #define GRID_HH
 
-#include "common.hh"
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <vector>
+
+using namespace std;
+
 
 class Grid {
 
@@ -22,16 +28,13 @@ public:
             for (int j = 0; j < size; j++)
                 array[i][j] = 0 ;
 
-        
-
-
     }
     
     int operator () (int i,int j) { 
             return array[i][j]; 
     } 
 
-    void placeAtRandomPosition();
+
 
     int getSize(){
         return size;
@@ -43,15 +46,16 @@ public:
 
     void display();
 
-    void saveGrid(ofstream& file);
-
-    
     void moveUp();
     void moveDown();
     void moveLeft();
     void moveRight();
 
-    bool isInside(int i,int j);
+    void saveGrid(ofstream& file);
+
+    
+    void placeAtRandomPosition();
+    
 
     void setScore(int s){
         score = s;
@@ -64,12 +68,32 @@ public:
         size = s;
     }
 
+    bool isFull(){
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                if(array[i][j] == 0)
+                    return false;
+        return true;
+    }
+
+    bool power11Exists(){
+
+        for (int i = 0; i < size; i++)
+            for (int j = 0; j < size; j++)
+                if(array[i][j] == 2048)
+                    return true;
+    
+        return false;
+    }
+
 
 private:
     int size;
     int score;
     vector<vector<int>> array;
-    
+
+    bool isInside(int i,int j);
+
 };
 
 

@@ -1,5 +1,4 @@
 #include "game.hh"
-#include "common.hh"
 
 
 int main()
@@ -23,11 +22,13 @@ int main()
             Game resumed_game = Game();
             resumed_game.resume();
             resumed_game.play();
-            
+
         }else if (menu == 'q')
         {
-            return true;
+            return 0;
         }
+
+        
         
     }  
 

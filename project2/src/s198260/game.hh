@@ -8,7 +8,6 @@ char diplayMenu();
 using namespace std;
 
 
-
 class Game {
 
 public:
@@ -40,14 +39,13 @@ public:
 private:
 
     int direction(char cmd);
-    int getSize(){
-        return pile.back().getSize();
-    }
+    int getSize();
     void displayInfos();
     bool gridChanged(Grid tmp);
     void save();
     void undo();
-
+    bool gameIsOver();
+    
     vector<Grid> pile;
 
 };

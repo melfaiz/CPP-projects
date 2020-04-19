@@ -1,10 +1,20 @@
 #include "game.hh"
-#include "common.hh"
+
+
+void clearScreen()
+{
+    cout << string(50, '\n');
+}
+
 
 void Game::displayInfos(){
 
         cout << "Score: " << pile.back().getScore() << endl;
 
+}
+
+int Game::getSize(){
+        return pile.back().getSize();   
 }
 
 char Game::displayMenu()
@@ -13,15 +23,15 @@ char Game::displayMenu()
     char key;
     do
     {
-        clearScreen();
+        clearScreen();        
         
-        cout << "  ** MENU **" << endl;
-        cout << "  e start a new Easy (5-by-5) game" << endl;
-        cout << "  h start a new Hard (4-by-4) game" << endl;
-        cout << "  r Resume the last saved game" << endl;
-        cout << "  q Quit the game" << endl << endl;
+        cout << "* * * * MENU * * * *" << endl;
+        cout << "* e start a new Easy (5-by-5) game" << endl;
+        cout << "* h start a new Hard (4-by-4) game" << endl;
+        cout << "* r Resume the last saved game" << endl;
+        cout << "* q Quit the game" << endl << endl;
 
-        cout << "  Rentrez votre choix: " ;
+        cout << "* Type your choice: " ;
 
         cin >> key;
 
@@ -68,10 +78,16 @@ int Game::play(){
         clearScreen();
         displayInfos();                        
         grid.display();
-        cout << "NEXT MOVE: ";
+        cout << endl << "* NEXT MOVE: ";    
         Grid tmp;
-        while (cin >> cmd)
+
+        bool game = true;
+
+        while (cin >> cmd && game == true)
         {
+
+
+                
 
                 clearScreen();
                 grid = pile.back();
@@ -114,28 +130,34 @@ int Game::play(){
                         {
                                 grid.placeAtRandomPosition();
                                 pile.push_back(grid);
+                        }else{
+                                
+                                if (grid.isFull())
+                                {
+                                        cout << "YOU LOST!" << endl;
+                                        game = false;
+                                }
+                                
                         }
              
                 }
 
 
-                
 
+                if (grid.power11Exists())
+                {
+                        cout << endl << "YOU WON WITH A SCORE OF " << grid.getScore() << endl;
+                        game = false;
+                }
 
-                
-                
-                displayInfos();                        
-                grid.display();
-                cout << "NEXT MOVE: ";                      
+                displayInfos();  
+                grid.display();    
 
-                
-                
-                
-
+                cout << endl << "* NEXT MOVE: " ;                  
 
         }
 
-        cout << endl << endl;
+      
         return true;
 
     
@@ -202,8 +224,7 @@ void Game::resume(){
 
         int size = ( vec[1].length() - 1 ) / 5;    
         int gridsNb = vec.size() / ( size + 3) ;     
-
-        cout << "size: " << size << ", nb: " << gridsNb << endl;                
+           
         
         for (int g = 0; g < gridsNb; g++)
         {       
@@ -219,12 +240,8 @@ void Game::resume(){
                 string score_str = score_line.substr (6,score_line.size());                          
                 int score = atoi(score_str.c_str());
 
-               
-                
 
-                
-
-                for (size_t i = 0; i < 4; i++)
+                for (int i = 0; i < size; i++)
                 {       
                         int indice = (size+3)*g + i + 2;
                      
@@ -266,4 +283,21 @@ void Game::resume(){
 
         pile = saved_pile;
         
+}
+
+bool Game::gameIsOver(){
+        Grid grid = pile.back();
+
+        if (grid.power11Exists())
+        {
+                cout << endl << "YOU WON WITH A SCORE OF " << grid.getScore() << endl;
+                return true;
+        }else
+        {
+                /* code */
+        }
+        
+        
+
+        return false;
 }
