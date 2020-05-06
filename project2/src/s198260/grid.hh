@@ -8,15 +8,14 @@
 
 using namespace std;
 
-
-class Grid {
+class Grid
+{
 
 public:
-
     Grid() = default;
-    
-    Grid(int s){
 
+    Grid(int s)
+    {
 
         size = s;
         score = 0;
@@ -26,76 +25,55 @@ public:
 
         for (int i = 0; i < size; i++)
             for (int j = 0; j < size; j++)
-                array[i][j] = 0 ;
-
+                array[i][j] = 0;
     }
-    
-    int operator () (int i,int j) { 
-            return array[i][j]; 
-    } 
 
 
 
-    int getSize(){
+    int getSize()
+    {
         return size;
     }
-    
-    int getScore(){
+
+    int getScore()
+    {
         return score;
     }
-
-    void display();
-
-    void moveUp();
-    void moveDown();
-    void moveLeft();
-    void moveRight();
-
-    void saveGrid(ofstream& file);
-
     
-    void placeAtRandomPosition();
-    
-
-    void setScore(int s){
+    void setScore(int s)
+    {
         score = s;
     }
-    void setArray(vector<vector<int>> new_array){
+    void setArray(vector<vector<int>> new_array)
+    {
         array = new_array;
     }
 
-    void setSize(int s){
+    void setSize(int s)
+    {
         size = s;
     }
 
-    bool isFull(){
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
-                if(array[i][j] == 0)
-                    return false;
-        return true;
-    }
+    void display(); // Display the grid
+    void moveUp(); 
+    void moveDown();
+    void moveLeft();
+    void moveRight();
+    void saveGrid(ofstream &file); // Write the grid into the ofstream
 
-    bool power11Exists(){
+    int operator()(int i, int j);
 
-        for (int i = 0; i < size; i++)
-            for (int j = 0; j < size; j++)
-                if(array[i][j] == 2048)
-                    return true;
+    void placeAtRandomPosition(); // Placing either a 4 or a 2 in an empty cases in the grid
+
+    bool power11Exists(); // Search if the number 2048 is present on the grid
     
-        return false;
-    }
-
 
 private:
     int size;
     int score;
-    vector<vector<int>> array;
+    vector<vector<int>> array; // Grid's actual array
 
-    bool isInside(int i,int j);
-
+    bool isInside(int i, int j); 
 };
-
-
 
 #endif

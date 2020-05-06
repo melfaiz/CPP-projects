@@ -3,41 +3,37 @@
 
 #include "grid.hh"
 
-char diplayMenu();
-
 using namespace std;
 
-
-class Game {
+class Game
+{
 
 public:
-
     Game() = default;
 
-    Game(char m){
-        
-        if (m == 'e'){
+    Game(char m)
+    {
+
+        if (m == 'e')
+        {
             Grid new_grid = Grid(5);
             pile.push_back(new_grid);
-            
-        }else
-        {   
+        }
+        else
+        {
             Grid new_grid = Grid(4);
             pile.push_back(new_grid);
         }
-
-    
     }
 
-
-    void resume();
+    bool resume();
     void start();
-    int play();
+    bool play();
+    
     static char displayMenu();
-
+    static void clearScreen();
 
 private:
-
     int direction(char cmd);
     int getSize();
     void displayInfos();
@@ -45,9 +41,8 @@ private:
     void save();
     void undo();
     bool gameIsOver();
-    
-    vector<Grid> pile;
 
+    vector<Grid> pile; // All the game states
 };
 
 #endif
